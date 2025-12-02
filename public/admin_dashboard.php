@@ -29,12 +29,20 @@ $flashMessage = getFlashMessage();
     <title>Admin Dashboard - <?php echo APP_NAME; ?></title>
     <link rel="stylesheet" href="homepage.css">
     <link rel="stylesheet" href="assets/css/dashboard.css">
+    <link rel="stylesheet" href="assets/css/mobile-sidebar.css">
+    <link rel="stylesheet" href="assets/css/header-icon.css">
 </head>
 <body>
     <div class="dashboard-layout">
-        <aside class="sidebar">
+        <!-- Mobile Sidebar Overlay -->
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+        <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <img src="assets/images/logo_leyeco3.webp" alt="LEYECO III Logo" class="header-logo">
+                <button class="sidebar-close" id="sidebarClose" aria-label="Close Menu">
+                    <span>&times;</span>
+                </button>
             </div>
             <nav class="sidebar-nav">
                 <a href="admin_dashboard.php" class="nav-item active">
@@ -60,8 +68,18 @@ $flashMessage = getFlashMessage();
         </aside>
 
         <main class="dashboard-main">
+            <!-- Mobile Menu Button -->
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle Menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
             <header class="dashboard-header">
-                <h1>Admin Dashboard</h1>
+                <h1>
+                    <img src="assets/icons/fc1911.png" alt="Admin" class="header-title-icon">
+                    Admin Dashboard
+                </h1>
                 <p>System overview and statistics</p>
             </header>
 
@@ -200,6 +218,41 @@ $flashMessage = getFlashMessage();
             </div>
         </main>
     </div>
+    
     <script src="assets/js/main.js"></script>
+    <script>
+        // Mobile Sidebar Toggle
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const sidebarClose = document.getElementById('sidebarClose');
+
+        // Open sidebar
+        mobileMenuBtn.addEventListener('click', () => {
+            sidebar.classList.add('open');
+            sidebarOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden'; // Prevent scrolling when sidebar is open
+        });
+
+        // Close sidebar
+        const closeSidebar = () => {
+            sidebar.classList.remove('open');
+            sidebarOverlay.classList.remove('active');
+            document.body.style.overflow = ''; // Restore scrolling
+        };
+
+        sidebarClose.addEventListener('click', closeSidebar);
+        sidebarOverlay.addEventListener('click', closeSidebar);
+
+        // Close sidebar when clicking nav items on mobile
+        const navItems = document.querySelectorAll('.nav-item');
+        navItems.forEach(item => {
+            item.addEventListener('click', () => {
+                if (window.innerWidth <= 768) {
+                    closeSidebar();
+                }
+            });
+        });
+    </script>
 </body>
 </html>

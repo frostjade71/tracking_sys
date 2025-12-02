@@ -28,6 +28,8 @@ if (isset($_GET['ref'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>View Report - <?php echo APP_NAME; ?></title>
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <link rel="stylesheet" href="homepage.css">
     <style>
         .report-container {
@@ -51,27 +53,27 @@ if (isset($_GET['ref'])) {
         }
         .status-badge {
             display: inline-block;
-            padding: 8px 16px;
-            border-radius: 20px;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
             font-weight: 600;
-            font-size: 14px;
             text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: white;
+            text-align: center;
+            min-width: 100px;
         }
         .status-NEW {
-            background: #dbeafe;
-            color: #1e40af;
+            background-color: #84CC16; /* lime */
         }
         .status-INVESTIGATING {
-            background: #fef3c7;
-            color: #92400e;
+            background-color: #F59E0B; /* yellow */
         }
         .status-RESOLVED {
-            background: #d1fae5;
-            color: #065f46;
+            background-color: #10B981; /* green */
         }
         .status-CLOSED {
-            background: #e5e7eb;
-            color: #374151;
+            background-color: #6B7280; /* grey */
         }
         .report-details {
             display: grid;
@@ -213,6 +215,14 @@ if (isset($_GET['ref'])) {
                         <div class="detail-value">
                             <?php echo e($report['municipality']); ?><br>
                             <?php echo e($report['address']); ?>
+                            <?php if ($report['lat'] && $report['lon']): ?>
+                                <div style="display: flex; flex-direction: column; align-items: flex-start; margin-top: 10px;">
+                                    <div id="map" style="height: 200px; width: 100%; max-width: 300px; border-radius: 8px; border: 1px solid #ddd;"></div>
+                                    <div class="coordinates" style="font-size: 11px; color: #666; margin-top: 5px; background: #f5f5f5; padding: 3px 8px; border-radius: 4px;">
+                                        Coordinates: <?php echo e($report['lat']); ?>, <?php echo e($report['lon']); ?>
+                                    </div>
+                                </div>
+                            <?php endif; ?>
                         </div>
                     </div>
 
@@ -304,5 +314,38 @@ if (isset($_GET['ref'])) {
             </div>
         <?php endif; ?>
     </div>
+    
+    <?php if ($report && $report['lat'] && $report['lon']): ?>
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var lat = <?php echo $report['lat']; ?>;
+            var lon = <?php echo $report['lon']; ?>;
+            
+            // Initialize map centered on the report location with a closer zoom
+            var map = L.map('map').setView([lat, lon], 16);
+            
+            // Add OpenStreetMap tiles
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                maxZoom: 19,
+            }).addTo(map);
+            
+            // Add marker at the report location
+            L.marker([lat, lon]).addTo(map)
+                .bindPopup('<?php echo e(addslashes($report['address'])); ?>')
+                .openPopup();
+            
+            // Add a circle to highlight the area (100m radius)
+            L.circle([lat, lon], {
+                color: '#3498db',
+                fillColor: '#3498db',
+                fillOpacity: 0.2,
+                radius: 100
+            }).addTo(map);
+        });
+    </script>
+    <?php endif; ?>
 </body>
 </html>

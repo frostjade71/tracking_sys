@@ -13,9 +13,9 @@ require_once __DIR__ . '/../app/AuthController.php';
 if (isLoggedIn()) {
     $user = getCurrentUser();
     if ($user['role'] === 'ADMIN') {
-        redirect('/admin_dashboard.php');
+        redirect('admin_dashboard.php');
     } else {
-        redirect('/operator_dashboard.php');
+        redirect('operator_dashboard.php');
     }
 }
 
@@ -37,9 +37,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($result['success']) {
                 // Redirect based on role
                 if ($result['user']['role'] === 'ADMIN') {
-                    redirect('/admin_dashboard.php');
+                    redirect('admin_dashboard.php');
                 } else {
-                    redirect('/operator_dashboard.php');
+                    redirect('operator_dashboard.php');
                 }
             } else {
                 $error = $result['error'];
@@ -88,7 +88,7 @@ $csrfToken = generateCSRFToken();
             width: 80px;
             height: 80px;
             margin: 0 auto 20px;
-            background: url('assets/images/logo_leyeco3.webp') center/contain no-repeat;
+            background: url('assets/images/logoL3iii.webp') center/contain no-repeat;
             filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
         }
         .login-header h1 {
@@ -101,6 +101,55 @@ $csrfToken = generateCSRFToken();
             color: var(--text-gray);
             font-weight: 500;
             font-size: 15px;
+        }
+        
+        /* Mobile Responsive Styles */
+        @media (max-width: 767px) {
+            .login-container {
+                margin: 30px 15px;
+                padding: 25px 20px;
+                border-radius: 12px;
+            }
+            
+            .login-header {
+                margin-bottom: 20px;
+            }
+            
+            .login-header::before {
+                width: 60px;
+                height: 60px;
+                margin: 0 auto 12px;
+            }
+            
+            .login-header h1 {
+                font-size: 24px;
+                margin-bottom: 6px;
+            }
+            
+            .login-header p {
+                font-size: 13px;
+            }
+            
+            .form-group {
+                margin-bottom: 16px;
+            }
+            
+            .form-group label {
+                font-size: 13px;
+                margin-bottom: 6px;
+            }
+            
+            .form-group input {
+                padding: 10px 14px;
+                font-size: 15px;
+                border-radius: 8px;
+            }
+            
+            .btn {
+                padding: 10px 20px;
+                font-size: 15px;
+                border-radius: 8px;
+            }
         }
         .form-group {
             margin-bottom: 22px;
@@ -167,7 +216,7 @@ $csrfToken = generateCSRFToken();
     <div class="container">
         <div class="login-container">
             <div class="login-header">
-                <h1>⚡ Staff Login</h1>
+                <h1>Staff Login</h1>
                 <p>LEYECO III Utility Report System</p>
             </div>
 
@@ -208,12 +257,6 @@ $csrfToken = generateCSRFToken();
             </form>
 
             <a href="homepage.php" class="back-link">← Back to Homepage</a>
-
-            <div class="credentials-info">
-                <strong>Default Credentials (for testing):</strong><br>
-                Admin: admin@example.com / admin123<br>
-                Operator: operator@example.com / operator123
-            </div>
         </div>
     </div>
 </body>

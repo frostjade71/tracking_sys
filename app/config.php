@@ -5,22 +5,22 @@
  */
 
 // Error Reporting (set to 0 in production)
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+error_reporting(0);
+ini_set('display_errors', 0);
 
 // Timezone
 date_default_timezone_set('Asia/Manila');
 
 // Database Configuration
-define('DB_HOST', getenv('DB_HOST') ?: 'db');
-define('DB_NAME', getenv('DB_NAME') ?: 'leyeco_db');
-define('DB_USER', getenv('DB_USER') ?: 'leyeco_user');
-define('DB_PASS', getenv('DB_PASS') ?: 'leyeco_pass');
+define('DB_HOST', getenv('DB_HOST') ?: 'localhost');
+define('DB_NAME', getenv('DB_NAME') ?: 'frostjad_leyeco_db');
+define('DB_USER', getenv('DB_USER') ?: 'frostjad_leyeco_db');
+define('DB_PASS', getenv('DB_PASS') ?: '2SPdmDLDYxT9vbFF5kct');
 define('DB_CHARSET', 'utf8mb4');
 
 // Application Configuration
 define('APP_NAME', 'LEYECO III Utility Report System');
-define('APP_URL', getenv('APP_URL') ?: 'http://localhost:8080');
+define('APP_URL', getenv('APP_URL') ?: 'https://wh1494404.ispot.cc/Leyeco3_fault_report');
 
 // File Upload Configuration
 define('UPLOAD_DIR', __DIR__ . '/../public/assets/uploads/');

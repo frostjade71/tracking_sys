@@ -22,6 +22,10 @@
     --warning-orange: #F59E0B;
     --info-blue: #3B82F6;
     --danger-color: #DC2626;
+    --status-new: #84CC16; /* lime */
+    --status-investigating: #F59E0B; /* yellow */
+    --status-resolved: #10B981; /* green */
+    --status-closed: #6B7280; /* grey */
 
     /* Shadows */
     --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
@@ -716,4 +720,34 @@
     .user-form .form-row {
         grid-template-columns: 1fr;
     }
+}
+
+/* Status Badges */
+.status-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: white;
+    text-align: center;
+    min-width: 100px;
+}
+
+.status-NEW {
+    background-color: #84CC16; /* lime */
+}
+
+.status-INVESTIGATING {
+    background-color: #F59E0B; /* yellow */
+}
+
+.status-RESOLVED {
+    background-color: #10B981; /* green */
+}
+
+.status-CLOSED {
+    background-color: #6B7280; /* grey */
 }

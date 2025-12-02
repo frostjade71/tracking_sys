@@ -653,7 +653,11 @@ body {
     }
 
     .nav .btn {
-        width: 100%;
+        width: auto;
+        padding: 8px 16px;
+        font-size: 13px;
+        margin: 0 auto;
+        max-width: 200px;
     }
 
     .user-info {
@@ -676,10 +680,20 @@ body {
 
     .hero-actions {
         flex-direction: column;
+        gap: 10px;
+        margin-top: 10px;
     }
 
     .hero-actions .btn {
         width: 100%;
+        max-width: 280px;
+        margin: 0 auto;
+        padding: 10px 16px;
+        font-size: 13px;
+    }
+
+    .hero-actions .btn:first-child {
+        margin-bottom: 8px;
     }
 
     .stats {
@@ -700,7 +714,22 @@ body {
     }
 
     .stats-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+
+    .stat-card {
+        padding: 15px 10px;
+        border-radius: 10px;
+    }
+
+    .stat-number {
+        font-size: 28px;
+        margin-bottom: 4px;
+    }
+
+    .stat-label {
+        font-size: 12px;
     }
 
     .steps {

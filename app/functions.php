@@ -123,7 +123,7 @@ function uploadPhoto($file) {
 function requireLogin() {
     startSession();
     if (!isset($_SESSION['user_id'])) {
-        header('Location: /login.php');
+        header('Location: login.php');
         exit;
     }
 }

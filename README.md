@@ -1,203 +1,103 @@
-# LEYECO III Utility Report System
+# 🔌 LEYECO III Trouble Report System
 
-A complete, production-ready PHP + MySQL web application for managing electrical trouble reports with public submission, operator management, and admin controls.
+A modern, secure web application for managing electrical service requests and power outage reports.
 
-## 🚀 Features
+## ✨ Key Features
 
-### Public Features (No Login Required)
-- **Submit Trouble Reports**: Report power outages, damaged equipment, or electrical hazards
-- **Track Reports**: View report status using unique reference codes
-- **Photo Upload**: Attach photos to reports (max 5MB, JPG/PNG only)
-- **Real-time Statistics**: View system-wide report statistics
+### 👥 Public Access
+- Submit and track trouble reports
+- Photo uploads (JPG/PNG, max 5MB)
+- Real-time status updates
+- No login required for submissions
 
-### Operator Features (Login Required)
-- **Dashboard**: View all reports with advanced filtering
-- **Report Management**: Update status, add notes, assign technicians
-- **Status Tracking**: NEW → INVESTIGATING → RESOLVED → CLOSED
-- **Activity Timeline**: Complete history of all report updates
+### 👷 Operator Tools
+- Interactive dashboard
+- Report management system
+- Status workflow: NEW → INVESTIGATING → RESOLVED → CLOSED
+- Full activity history
 
-### Admin Features (Admin Role Only)
-- **User Management**: Add, edit, delete operators and admins
-- **System Metrics**: Comprehensive statistics and analytics
-- **Role Management**: Assign ADMIN or OPERATOR roles
-- **Audit Logs**: Track all system activities
+### 👑 Admin Console
+- User and role management
+- System analytics
+- Audit logging
+- Configuration settings
 
-## 📋 Technology Stack
+## � Tech Stack
 
-- **Backend**: PHP 8.2+ (OOP with PDO)
+- **Backend**: PHP 8.2+ with PDO
 - **Database**: MySQL 8.0
-- **Server**: Apache 2.4
-- **Frontend**: Pure PHP templates + HTML/CSS + Vanilla JS
+- **Frontend**: Vanilla JS, HTML5, CSS3
 - **Deployment**: Docker + Docker Compose
+- **Web Server**: Apache 2.4
 
-## 🛠️ Installation
+## 🚀 Quick Start
 
-### Prerequisites
+### With Docker (Recommended)
+```bash
+git clone [repository-url] tracking_sys
+cd tracking_snys
+docker-compose up -d
+```
 
-- Docker Desktop installed
-- Docker Compose installed
-- Git (optional)
+Access the application:
+- Web Interface: http://localhost:8080
+- phpMyAdmin: http://localhost:8081
 
-### Quick Start
+### Default Logins
+- **Admin**: admin@example.com / admin123
+- **Operator**: operator@example.com / operator123
 
-1. **Clone or download the project**
-   ```bash
-   cd c:\xampp\htdocs\tracking_sys
-   ```
+> ⚠️ **Security Note**: Change default passwords immediately after first login!
 
-2. **Start the application**
-   ```bash
-   docker-compose up -d
-   ```
-
-3. **Wait for services to initialize** (30-60 seconds)
-   The database will automatically create tables and seed default users.
-
-4. **Access the application**
-   - **Main Application**: http://localhost:8080
-   - **phpMyAdmin**: http://localhost:8081 (root / root_password)
-
-5. **Login with default credentials**
-   - **Admin**: admin@example.com / admin123
-   - **Operator**: operator@example.com / operator123
-
-   ⚠️ **IMPORTANT**: Change these passwords immediately after first login!
-
-### Manual Installation (Without Docker)
-
-1. **Set up MySQL database**
-   ```sql
-   CREATE DATABASE leyeco_db;
-   CREATE USER 'leyeco_user'@'localhost' IDENTIFIED BY 'leyeco_pass';
-   GRANT ALL PRIVILEGES ON leyeco_db.* TO 'leyeco_user'@'localhost';
-   FLUSH PRIVILEGES;
-   ```
-
-2. **Import database schema**
-   ```bash
-   mysql -u leyeco_user -p leyeco_db < sql/schema.sql
-   mysql -u leyeco_user -p leyeco_db < sql/seed.sql
-   ```
-
-3. **Configure Apache**
-   - Set DocumentRoot to `/path/to/tracking_sys/public`
-   - Enable mod_rewrite
-   - Copy `docker/apache.conf` settings to your virtual host
-
-4. **Update configuration**
-   - Edit `app/config.php` with your database credentials
-
-5. **Set permissions**
-   ```bash
-   chmod -R 755 public/assets/uploads
-   ```
-
-## 📁 Project Structure
+## � Project Structure
 
 ```
 tracking_sys/
-├── public/                      # Public web root
-│   ├── index.php               # Entry point (redirects to homepage)
-│   ├── homepage.php            # Landing page
-│   ├── homepage.css            # Homepage styles
-│   ├── submit_report.php       # Public report submission
-│   ├── view_report.php         # Public report viewing
-│   ├── login.php               # Staff login
-│   ├── logout.php              # Logout handler
-│   ├── operator_dashboard.php  # Operator dashboard
-│   ├── operator_report_view.php # Report management
-│   ├── admin_dashboard.php     # Admin dashboard
-│   ├── manage_users.php        # User management
-│   ├── .htaccess               # Apache configuration
-│   └── assets/
-│       ├── css/
-│       │   └── dashboard.css   # Dashboard styles
-│       ├── js/                 # JavaScript files
-│       ├── images/             # Static images
-│       └── uploads/            # User-uploaded photos
-├── app/                        # Application logic
-│   ├── config.php              # Configuration & constants
-│   ├── db.php                  # PDO database connection
-│   ├── functions.php           # Helper functions
-│   ├── AuthController.php      # Authentication logic
-│   ├── ReportController.php    # Report CRUD operations
-│   └── UserController.php      # User management
-├── sql/                        # Database files
-│   ├── schema.sql              # Database schema
-│   └── seed.sql                # Default users
-├── docker/                     # Docker configuration
-│   ├── Dockerfile              # PHP Apache image
-│   └── apache.conf             # Apache virtual host
-├── docker-compose.yml          # Multi-container setup
-├── .env.example                # Environment template
-└── README.md                   # This file
+├── public/              # Web root
+├── app/                 # Backend logic
+├── sql/                 # Database files
+└── docker/              # Container config
 ```
 
-## 🔒 Security Features
+## 🔒 Security
+- SQL injection protection
+- CSRF tokens
+- Secure password hashing
+- Input validation & sanitization
+- Role-based access control
+- Comprehensive audit logging
 
-- ✅ **PDO Prepared Statements**: SQL injection protection
-- ✅ **CSRF Tokens**: Cross-site request forgery protection
-- ✅ **Password Hashing**: bcrypt with `password_hash()`
-- ✅ **Input Validation**: Sanitization on all user inputs
-- ✅ **File Upload Validation**: Type, size, and MIME checks
-- ✅ **Session Security**: Secure session management
-- ✅ **Role-Based Access**: Operator and Admin permissions
-- ✅ **Audit Logging**: Track all system activities
+## 📊 Database
+- **users**: System users and roles
+- **reports**: Service requests
+- **comments**: Status updates
+- **audit_logs**: System activities
 
-## 📊 Database Schema
+Reports use format: `LEY-YYYYMMDD-####` (e.g., `LEY-20251202-0001`)
 
-### Tables
+## 📝 Usage
 
-1. **users** - System users (operators and admins)
-2. **reports** - Trouble reports with all details
-3. **comments** - Status updates and operator notes
-4. **audit_logs** - System activity tracking
+### For Residents
+1. Visit http://localhost:8080
+2. Submit a new report or track existing one
+3. Receive updates via email (if provided)
 
-### Reference Code Format
+### For Staff
+1. Log in at /login.php
+2. Manage reports from dashboard
+3. Update statuses and add notes
 
-Reports are assigned unique reference codes: `LEY-YYYYMMDD-####`
+## ⚙️ Configuration
+Edit `app/config.php` for:
+- Database credentials
+- Email settings
+- System preferences
 
-Example: `LEY-20251202-0001`
+## � License
+[Specify License]
 
-## 🎯 Usage Guide
-
-### Submitting a Report (Public)
-
-1. Go to http://localhost:8080
-2. Click "Submit New Report"
-3. Fill in the form (only description, type, barangay, and address are required)
-4. Optionally upload a photo
-5. Submit and save your reference code
-
-### Tracking a Report (Public)
-
-1. Go to homepage
-2. Enter your reference code in the "Track Your Report" section
-3. View status and history
-
-### Managing Reports (Operator)
-
-1. Login at http://localhost:8080/login.php
-2. View all reports in the dashboard
-3. Click "View" on any report
-4. Update status, add notes, or assign technicians
-
-### Managing Users (Admin)
-
-1. Login as admin
-2. Navigate to "Manage Users"
-3. Add new users with name, email, password, and role
-4. Change roles or delete users as needed
-
-## 🔧 Configuration
-
-### Environment Variables
-
-Edit `app/config.php` or set environment variables:
-
-```php
-DB_HOST=db              # Database host
-DB_NAME=leyeco_db       # Database name
+---
+*Built for LEYECO III - Powering Communities, One Connection at a Time*
 DB_USER=leyeco_user     # Database user
 DB_PASS=leyeco_pass     # Database password
 APP_URL=http://localhost:8080  # Application URL

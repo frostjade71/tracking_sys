@@ -21,8 +21,9 @@ $report = $reportController->getById($reportId);
 
 if (!$report) {
     setFlashMessage('error', 'Report not found');
-    redirect('/operator_dashboard.php');
+    redirect('operator_dashboard.php');
 }
+
 
 $errors = [];
 $success = null;
@@ -87,14 +88,57 @@ $csrfToken = generateCSRFToken();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Report <?php echo e($report['reference_code']); ?> - <?php echo APP_NAME; ?></title>
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <link rel="stylesheet" href="homepage.css">
     <link rel="stylesheet" href="assets/css/dashboard.css">
+    <link rel="stylesheet" href="assets/css/mobile-sidebar.css">
+    <style>
+        /* Map Styles */
+        #map {
+            height: 400px;
+            width: 100%;
+            border-radius: 10px;
+            margin: 15px 0;
+            border: 1px solid #ddd;
+        }
+        .map-info {
+            background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%);
+            border-left: 4px solid var(--accent-yellow);
+            padding: 12px 15px;
+            border-radius: 6px;
+            margin: 10px 0;
+            font-size: 14px;
+            color: #5F3F16;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .coordinates-display {
+            margin-top: 10px;
+            padding: 8px;
+            background: #f5f5f5;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        @media (max-width: 767px) {
+            #map {
+                height: 300px;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="dashboard-layout">
-        <aside class="sidebar">
+        <!-- Mobile Sidebar Overlay -->
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+        <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <img src="assets/images/logo_leyeco3.webp" alt="LEYECO III Logo" class="header-logo">
+                <button class="sidebar-close" id="sidebarClose" aria-label="Close Menu">
+                    <span>&times;</span>
+                </button>
             </div>
             <nav class="sidebar-nav">
                 <a href="operator_dashboard.php" class="nav-item">
@@ -119,6 +163,13 @@ $csrfToken = generateCSRFToken();
         </aside>
 
         <main class="dashboard-main">
+            <!-- Mobile Menu Button -->
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle Menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
             <header class="dashboard-header">
                 <div>
                     <a href="operator_dashboard.php" style="color: var(--primary-color); text-decoration: none; font-weight: 500;">← Back to Dashboard</a>
@@ -194,6 +245,23 @@ $csrfToken = generateCSRFToken();
                             <div class="detail-item">
                                 <label>Assigned To</label>
                                 <span><?php echo e($report['assigned_to_name']); ?></span>
+                            </div>
+                        <?php endif; ?>
+                        
+                        <!-- Map Display -->
+                        <?php if (!empty($report['lat']) && !empty($report['lon'])): ?>
+                            <div class="detail-item" style="grid-column: 1 / -1;">
+                                <label>Report Location</label>
+                                <div class="map-info">
+                                    This is the reported location of the issue
+                                </div>
+                                <div id="map"></div>
+                                <div class="coordinates-display">
+                                    📌 Coordinates: 
+                                    <span id="coord-text">
+                                        <?php echo e($report['lat']); ?>, <?php echo e($report['lon']); ?>
+                                    </span>
+                                </div>
                             </div>
                         <?php endif; ?>
                         <?php if ($report['photo_path']): ?>
@@ -275,5 +343,74 @@ $csrfToken = generateCSRFToken();
             </div>
         </main>
     </div>
+    
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script>
+        // Only initialize map if coordinates exist
+        <?php if (!empty($report['lat']) && !empty($report['lon'])): ?>
+            document.addEventListener('DOMContentLoaded', function() {
+                var lat = <?php echo floatval($report['lat']); ?>;
+                var lon = <?php echo floatval($report['lon']); ?>;
+                
+                // Initialize map centered on the report location
+                var map = L.map('map').setView([lat, lon], 15);
+                
+                // Add OpenStreetMap tiles
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                    maxZoom: 19,
+                }).addTo(map);
+                
+                // Add marker at the report location
+                L.marker([lat, lon]).addTo(map)
+                    .bindPopup('Report Location')
+                    .openPopup();
+                
+                // Add a circle to highlight the area
+                L.circle([lat, lon], {
+                    color: '#3498db',
+                    fillColor: '#3498db',
+                    fillOpacity: 0.2,
+                    radius: 100 // 100 meters radius
+                }).addTo(map);
+            });
+        <?php endif; ?>
+    </script>
+    
+    <script>
+        // Mobile Sidebar Toggle
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const sidebarClose = document.getElementById('sidebarClose');
+
+        // Open sidebar
+        mobileMenuBtn.addEventListener('click', () => {
+            sidebar.classList.add('open');
+            sidebarOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+
+        // Close sidebar
+        const closeSidebar = () => {
+            sidebar.classList.remove('open');
+            sidebarOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        };
+
+        sidebarClose.addEventListener('click', closeSidebar);
+        sidebarOverlay.addEventListener('click', closeSidebar);
+
+        // Close sidebar when clicking nav items on mobile
+        const navItems = document.querySelectorAll('.nav-item');
+        navItems.forEach(item => {
+            item.addEventListener('click', () => {
+                if (window.innerWidth <= 768) {
+                    closeSidebar();
+                }
+            });
+        });
+    </script>
 </body>
 </html>

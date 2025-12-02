@@ -12,4 +12,4 @@ $authController = new AuthController();
 $authController->logout();
 
 setFlashMessage('success', 'You have been logged out successfully');
-redirect('/homepage.php');
+redirect('homepage.php');
