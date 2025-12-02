@@ -26,19 +26,27 @@ if (isset($_GET['ref'])) {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
     <title>View Report - <?php echo APP_NAME; ?></title>
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <link rel="stylesheet" href="homepage.css">
     <style>
         .report-container {
-            max-width: 900px;
+            max-width: 100%;
             margin: 0 auto;
             background: white;
-            padding: 40px;
+            padding: 15px;
             border-radius: 12px;
             box-shadow: var(--shadow-lg);
+        }
+        
+        @media (min-width: 768px) {
+            .report-container {
+                max-width: 900px;
+                padding: 30px;
+                margin: 15px auto;
+            }
         }
         .report-header {
             border-bottom: 2px solid var(--border-color);
@@ -80,11 +88,23 @@ if (isset($_GET['ref'])) {
             gap: 20px;
         }
         .detail-row {
-            display: grid;
-            grid-template-columns: 200px 1fr;
-            gap: 15px;
-            padding: 15px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            padding: 12px 0;
             border-bottom: 1px solid var(--border-color);
+        }
+        
+        @media (min-width: 768px) {
+            .detail-row {
+                display: grid;
+                grid-template-columns: 200px 1fr;
+                gap: 15px;
+                padding: 15px 0;
+            }
+            .detail-row > .detail-label {
+                text-align: right;
+            }
         }
         .detail-label {
             font-weight: 600;
@@ -97,45 +117,81 @@ if (isset($_GET['ref'])) {
             margin-top: 40px;
         }
         .timeline h3 {
-            margin-bottom: 20px;
+            margin-bottom: 30px;
             color: var(--text-primary);
+            font-size: 20px;
         }
         .timeline-item {
             position: relative;
-            padding-left: 30px;
-            padding-bottom: 25px;
-            border-left: 2px solid var(--border-color);
+            padding-left: 40px;
+            padding-bottom: 30px;
+            border-left: 3px solid #e5e7eb;
+            margin-left: 10px;
         }
         .timeline-item:last-child {
             border-left-color: transparent;
+            padding-bottom: 0;
         }
         .timeline-dot {
             position: absolute;
-            left: -7px;
-            top: 0;
-            width: 12px;
-            height: 12px;
+            left: -11px;
+            top: 4px;
+            width: 20px;
+            height: 20px;
             border-radius: 50%;
-            background: var(--primary-color);
+            background: #3b82f6;
+            border: 3px solid white;
+            box-shadow: 0 0 0 3px #e5e7eb, 0 2px 4px rgba(0, 0, 0, 0.1);
+            z-index: 1;
+        }
+        .timeline-item:first-child .timeline-dot {
+            background: #10b981;
+            box-shadow: 0 0 0 3px #d1fae5, 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .timeline-item:nth-child(2) .timeline-dot {
+            background: #3b82f6;
+            box-shadow: 0 0 0 3px #dbeafe, 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .timeline-item:nth-child(3) .timeline-dot {
+            background: #f59e0b;
+            box-shadow: 0 0 0 3px #fef3c7, 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .timeline-item:nth-child(n+4) .timeline-dot {
+            background: #6b7280;
+            box-shadow: 0 0 0 3px #f3f4f6, 0 2px 4px rgba(0, 0, 0, 0.1);
         }
         .timeline-content {
-            background: var(--bg-color);
-            padding: 15px;
-            border-radius: 8px;
+            background: #f9fafb;
+            padding: 16px;
+            border-radius: 10px;
+            font-size: 14px;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            transition: all 0.2s ease;
+        }
+        .timeline-content:hover {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
         }
         .timeline-date {
             font-size: 12px;
-            color: var(--text-secondary);
-            margin-bottom: 5px;
+            color: #6b7280;
+            margin-bottom: 8px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         .timeline-message {
             color: var(--text-primary);
+            line-height: 1.6;
         }
         .timeline-user {
             font-size: 12px;
-            color: var(--text-secondary);
+            color: #6b7280;
             font-style: italic;
-            margin-top: 5px;
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid #e5e7eb;
         }
         .photo-preview {
             margin-top: 15px;
@@ -160,10 +216,50 @@ if (isset($_GET['ref'])) {
         }
         .search-again {
             background: var(--bg-color);
-            padding: 30px;
-            border-radius: 12px;
-            margin-top: 30px;
+            padding: 20px 15px;
+            border-radius: 8px;
+            margin: 20px 0;
             text-align: center;
+        }
+        
+        .search-form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .search-form input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+        }
+        
+        .search-form button {
+            width: 100%;
+            padding: 10px;
+        }
+        
+        @media (min-width: 768px) {
+            .search-form {
+                flex-direction: row;
+                max-width: 600px;
+                margin: 0 auto;
+            }
+            
+            .search-form input[type="text"] {
+                width: 70%;
+            }
+            
+            .search-form button {
+                width: 30%;
+            }
+            
+            .search-again {
+                padding: 25px;
+                margin: 30px auto;
+                max-width: 800px;
+            }
         }
     </style>
 </head>
