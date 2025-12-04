@@ -93,6 +93,9 @@ $csrfToken = generateCSRFToken();
     <link rel="stylesheet" href="homepage.css">
     <link rel="stylesheet" href="assets/css/dashboard.css">
     <link rel="stylesheet" href="assets/css/mobile-sidebar.css">
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/3.0.0/uicons-solid-rounded/css/uicons-solid-rounded.css'>
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/3.0.0/uicons-bold-rounded/css/uicons-bold-rounded.css'>
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/3.0.0/uicons-bold-straight/css/uicons-bold-straight.css'>
     <style>
         /* Map Styles */
         #map {
@@ -142,18 +145,18 @@ $csrfToken = generateCSRFToken();
             </div>
             <nav class="sidebar-nav">
                 <a href="operator_dashboard.php" class="nav-item">
-                    <img src="assets/icons/fc9.png" alt="Dashboard" class="nav-icon"> Dashboard
+                    <i class="fi fi-sr-newspaper nav-icon"></i> Dashboard
                 </a>
                 <?php if ($user['role'] === 'ADMIN'): ?>
                     <a href="admin_dashboard.php" class="nav-item">
-                        <img src="assets/icons/fc1911.png" alt="Admin" class="nav-icon"> Admin Panel
+                        <i class="fi fi-br-admin nav-icon"></i> Admin Panel
                     </a>
                 <?php endif; ?>
                 <a href="homepage.php" class="nav-item">
-                    <img src="assets/icons/fc93.png" alt="Home" class="nav-icon"> Public Homepage
+                    <i class="fi fi-sr-home nav-icon"></i> Public Homepage
                 </a>
                 <a href="logout.php" class="nav-item">
-                    <img src="assets/icons/fc3.png" alt="Logout" class="nav-icon"> Logout
+                    <i class="fi fi-bs-sign-out-alt nav-icon"></i> Logout
                 </a>
             </nav>
             <div class="sidebar-user">
