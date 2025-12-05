@@ -1,2 +1,5 @@
 config.php
 config.production.php
+leyeco_db.sql
+schema.sql
+seed.sql
